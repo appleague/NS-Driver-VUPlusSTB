@@ -1,0 +1,10 @@
+{
+  "id": "net.appleague.vuplus.stb",
+  "name": "VUplus STB Driver",
+  "version": "0.0.1",
+  "description": "Control of Enigma2 based Smart STBs using IP",
+  "main": "NS-Driver-VUPlusSTB",
+  "author": "Martin Hennerbichler <martin@appleague.net>",
+  "license": "MIT",
+  "maxMemory": 10
+}
