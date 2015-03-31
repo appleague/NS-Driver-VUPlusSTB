@@ -42,7 +42,7 @@ type STBConfig struct {
 }
 
 func NewDriver() (*Driver, error) {
-
+	log.Infof("NewDriver")
 	driver := &Driver{
 		devices: make(map[string]*Device),
 	}
@@ -61,6 +61,7 @@ func NewDriver() (*Driver, error) {
 }
 
 func (d *Driver) deleteSTB(id string) error {
+	log.Infof("deleteSTB")
 	delete(d.config.STBs, id)
 
 	err := d.SendEvent("config", &d.config)
@@ -75,7 +76,7 @@ func (d *Driver) deleteSTB(id string) error {
 }
 
 func (d *Driver) saveSTB(stb STBConfig) error {
-
+	log.Infof("saveSTB")
 	if !(&enigma2.STB{Host: stb.Host}).Online(time.Second * 5) {
 		return fmt.Errorf("Could not connect to STB. Is it online?")
 	}
@@ -121,12 +122,11 @@ func (d *Driver) Start(config *Config) error {
 	d.Conn.MustExportService(&configService{d}, "$driver/"+info.ID+"/configure", &model.ServiceAnnouncement{
 		Schema: "/protocol/configuration",
 	})
-
 	return nil
 }
 
 func (d *Driver) createSTBDevice(cfg *STBConfig) {
-
+	log.Infof("createSTBDevice")
 	device, err := newDevice(d, d.Conn, cfg)
 
 	if err != nil {
@@ -137,7 +137,7 @@ func (d *Driver) createSTBDevice(cfg *STBConfig) {
 }
 
 func getMACAddress(host string, timeout time.Duration) (string, error) {
-
+	log.Infof("getMACAddress")
 	timedOut := false
 	success := make(chan string, 1)
 

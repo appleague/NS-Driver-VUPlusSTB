@@ -77,7 +77,7 @@ func (c *configService) Configure(request *model.ConfigurationRequest) (*suit.Co
 }
 
 func (c *configService) error(message string) (*suit.ConfigurationScreen, error) {
-
+	log.Infof("configService")
 	return &suit.ConfigurationScreen{
 		Sections: []suit.Section{
 			suit.Section{
@@ -99,7 +99,7 @@ func (c *configService) error(message string) (*suit.ConfigurationScreen, error)
 	}, nil
 }
 func (c *configService) list() (*suit.ConfigurationScreen, error) {
-
+	log.Infof("list configService")
 	var stbs []suit.ActionListOption
 
 	for _, stb := range c.driver.config.STBs {
@@ -149,7 +149,7 @@ func (c *configService) list() (*suit.ConfigurationScreen, error) {
 }
 
 func (c *configService) edit(config STBConfig) (*suit.ConfigurationScreen, error) {
-
+	log.Infof("edit config STBConfig")
 	title := "New VUplus STB"
 	if config.ID != "" {
 		title = "Editing VUplus STB"

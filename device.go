@@ -16,11 +16,12 @@ type Device struct {
 }
 
 func (d *Device) updateHost(host string) {
+	log.Infof("updateHost")
 	d.stb.Host = host
 }
 
 func newDevice(driver ninja.Driver, conn *ninja.Connection, cfg *STBConfig) (*Device, error) {
-
+	log.Infof("newDevice")
 	player, err := devices.CreateMediaPlayerDevice(driver, &model.Device{
 		NaturalID:     cfg.ID,
 		NaturalIDType: "enigma2-stb",

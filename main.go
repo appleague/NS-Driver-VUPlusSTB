@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-
+	log.Infof("main")
 	_, err := NewDriver()
 
 	if err != nil {
