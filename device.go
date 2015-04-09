@@ -1,7 +1,7 @@
 package main
 
 import (
-	"time"
+	//"time"
 
 	"github.com/appleague/go-enigma2"
 	"github.com/ninjasphere/go-ninja/api"
@@ -46,22 +46,63 @@ func newDevice(driver ninja.Driver, conn *ninja.Connection, cfg *STBConfig) (*De
 		ApplicationName: "Ninja Sphere         ",
 	}
 
-	// On-off Channel
-	player.ApplyOff = func() error {
-		return stb.SendCommand("POWEROFF")
+	stb.SendMessage("driver_loaded")
+
+	// Volume Channel
+	player.ApplyVolumeUp = func() error {
+		stb.SendCommand("VOLUP")
+		return nil
 	}
 
-	if err := player.EnableOnOffChannel("state"); err != nil {
+	player.ApplyVolumeDown = func() error {
+		stb.SendCommand("VOLDOWN")
+		return nil
+	}
+
+	player.ApplyToggleMuted = func() error {
+		stb.SendCommand("MUTE")
+		return nil
+	}
+
+	if err := player.EnableVolumeChannel(false); err != nil {
+		player.Log().Fatalf("Failed to enable volume channel: %s", err)
+	}
+
+	// Media Control Channel
+	player.ApplyPlayPause = func(play bool) error {
+		stb.SendCommand("TOGGLEONOFF")
+		return nil
+	}
+
+	player.ApplyStop = func() error {
+		stb.SendCommand("POWEROFF")
+		return nil
+	}
+
+	if err := player.EnableControlChannel([]string{}); err != nil {
 		player.Log().Fatalf("Failed to enable control channel: %s", err)
 	}
-
-	go func() {
-
-		// Continuous updates as STB goes online and offline
-		for online := range stb.OnlineState(time.Second * 15) {
-			player.UpdateOnOffState(online)
+	/*
+		// Toggle On-off Channel
+		player.ApplyToggleOnOff = func() error {
+			return stb.SendCommand("TOGGLEONOFF")
 		}
-	}()
 
+		// On-off Channel
+		player.ApplyOff = func() error {
+			return stb.SendCommand("POWEROFF")
+		}
+
+		if err := player.EnableOnOffChannel("state"); err != nil {
+			player.Log().Fatalf("Failed to enable control channel: %s", err)
+		}
+
+		go func() {
+			// Continuous updates as STB goes online and offline
+			for online := range stb.OnlineState(time.Second * 15) {
+				player.UpdateOnOffState(online)
+			}
+		}()
+	*/
 	return &Device{*player, &stb}, nil
 }
