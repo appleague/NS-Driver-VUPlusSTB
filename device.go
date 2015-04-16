@@ -1,9 +1,9 @@
 package main
 
 import (
-	//"time"
+	"time"
 
-	"github.com/appleague/go-enigma2"
+	"github.com/appleague/go-NS-enigma2"
 	"github.com/ninjasphere/go-ninja/api"
 	"github.com/ninjasphere/go-ninja/config"
 	"github.com/ninjasphere/go-ninja/devices"
@@ -82,27 +82,27 @@ func newDevice(driver ninja.Driver, conn *ninja.Connection, cfg *STBConfig) (*De
 	if err := player.EnableControlChannel([]string{}); err != nil {
 		player.Log().Fatalf("Failed to enable control channel: %s", err)
 	}
-	/*
-		// Toggle On-off Channel
-		player.ApplyToggleOnOff = func() error {
-			return stb.SendCommand("TOGGLEONOFF")
-		}
 
-		// On-off Channel
-		player.ApplyOff = func() error {
-			return stb.SendCommand("POWEROFF")
-		}
+	// Toggle On-off Channel
+	player.ApplyToggleOnOff = func() error {
+		return stb.SendCommand("TOGGLEONOFF")
+	}
 
-		if err := player.EnableOnOffChannel("state"); err != nil {
-			player.Log().Fatalf("Failed to enable control channel: %s", err)
-		}
+	// On-off Channel
+	player.ApplyOff = func() error {
+		return stb.SendCommand("POWEROFF")
+	}
 
-		go func() {
-			// Continuous updates as STB goes online and offline
-			for online := range stb.OnlineState(time.Second * 15) {
-				player.UpdateOnOffState(online)
-			}
-		}()
-	*/
+	if err := player.EnableOnOffChannel("state"); err != nil {
+		player.Log().Fatalf("Failed to enable control channel: %s", err)
+	}
+
+	go func() {
+		// Continuous updates as STB goes online and offline
+		for online := range stb.OnlineState(time.Second * 15) {
+			player.UpdateOnOffState(online)
+		}
+	}()
+
 	return &Device{*player, &stb}, nil
 }

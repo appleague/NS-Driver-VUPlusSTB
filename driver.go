@@ -5,12 +5,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/appleague/go-enigma2"
+	"github.com/appleague/go-NS-enigma2"
 	"github.com/mostlygeek/arp"
 	"github.com/ninjasphere/go-ninja/api"
 	"github.com/ninjasphere/go-ninja/logger"
-	// actually the config export for the stb wont work
-	//"github.com/ninjasphere/go-ninja/model"
+	"github.com/ninjasphere/go-ninja/model"
 	"github.com/ninjasphere/go-ninja/support"
 )
 
@@ -111,18 +110,35 @@ func (d *Driver) Start(config *Config) error {
 	log.Infof("Driver Starting with config %+v", config)
 
 	if config.STBs == nil {
-		log.Infof("config.STBs == nil")
+		config.STBs = make(map[string]*STBConfig)
+	}
+
+	d.config = *config
+
+	for _, cfg := range config.STBs {
+		d.createSTBDevice(cfg)
+	}
+
+	d.Conn.MustExportService(&configService{d}, "$driver/"+info.ID+"/configure", &model.ServiceAnnouncement{
+		Schema: "/protocol/configuration",
+	})
+
+	return nil
+}
+
+/*
+func (d *Driver) Start(config *Config) error {
+	log.Infof("Driver Starting with config %+v", config)
+
+	if config.STBs == nil {
 		config.STBs = make(map[string]*STBConfig)
 
 		var stbcfg STBConfig
 
-		// actually the config export for the stb wont work
-		//stb := enigma2.STB{}
+		stb := enigma2.STB{}
 
-		// actually the config export for the stb wont work
-		// setting the stb config manually
-		stbcfg.Host = "10.0.0.20"
-		stbcfg.ID = "VU+ Solo 2"
+		//stbcfg.Host = "10.0.0.20"
+		//stbcfg.ID = "VU+ Solo 2"
 
 		config.STBs[stbcfg.ID] = &stbcfg
 
@@ -136,15 +152,14 @@ func (d *Driver) Start(config *Config) error {
 		d.createSTBDevice(cfg)
 	}
 
-	// actually the config export for the stb wont work
-	//log.Infof("MustExportService")
-	//d.Conn.MustExportService(&configService{d}, "$driver/"+info.ID+"/configure", &model.ServiceAnnouncement{
-	//	Schema: "/protocol/configuration",
-	//})
+	log.Infof("MustExportService")
+	d.Conn.MustExportService(&configService{d}, "$driver/"+info.ID+"/configure", &model.ServiceAnnouncement{
+		Schema: "/protocol/configuration",
+	})
 
 	return nil
 }
-
+*/
 func (d *Driver) createSTBDevice(cfg *STBConfig) {
 	device, err := newDevice(d, d.Conn, cfg)
 
