@@ -126,40 +126,6 @@ func (d *Driver) Start(config *Config) error {
 	return nil
 }
 
-/*
-func (d *Driver) Start(config *Config) error {
-	log.Infof("Driver Starting with config %+v", config)
-
-	if config.STBs == nil {
-		config.STBs = make(map[string]*STBConfig)
-
-		var stbcfg STBConfig
-
-		stb := enigma2.STB{}
-
-		//stbcfg.Host = "10.0.0.20"
-		//stbcfg.ID = "VU+ Solo 2"
-
-		config.STBs[stbcfg.ID] = &stbcfg
-
-		fmt.Println("Added STB config with Id " + stbcfg.ID)
-	}
-
-	d.config = *config
-
-	for _, cfg := range config.STBs {
-		log.Infof("createSTBDevice %+v", cfg)
-		d.createSTBDevice(cfg)
-	}
-
-	log.Infof("MustExportService")
-	d.Conn.MustExportService(&configService{d}, "$driver/"+info.ID+"/configure", &model.ServiceAnnouncement{
-		Schema: "/protocol/configuration",
-	})
-
-	return nil
-}
-*/
 func (d *Driver) createSTBDevice(cfg *STBConfig) {
 	device, err := newDevice(d, d.Conn, cfg)
 

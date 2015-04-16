@@ -38,8 +38,6 @@ func newDevice(driver ninja.Driver, conn *ninja.Connection, cfg *STBConfig) (*De
 		return nil, err
 	}
 
-	enigma2.EnableLogging = true
-
 	stb := enigma2.STB{
 		Host:            cfg.Host,
 		ApplicationID:   config.MustString("userId"),
