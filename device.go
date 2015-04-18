@@ -98,7 +98,7 @@ func newDevice(driver ninja.Driver, conn *ninja.Connection, cfg *STBConfig) (*De
 
 	go func() {
 		// Continuous updates as STB goes online and offline
-		for online := range stb.OnlineState(time.Second * 15) {
+		for online := range stb.OnlineState(time.Second * 60) {
 			player.UpdateOnOffState(online)
 		}
 	}()
