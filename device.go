@@ -41,10 +41,11 @@ func newDevice(driver ninja.Driver, conn *ninja.Connection, cfg *STBConfig) (*De
 	stb := enigma2.STB{
 		Host:            cfg.Host,
 		ApplicationID:   config.MustString("userId"),
-		ApplicationName: "Ninja Sphere         ",
+		ApplicationName: cfg.Name,
+		//ApplicationName: "Ninja Sphere         ",
 	}
 
-	stb.SendMessage("driver_loaded")
+	stb.SendMessage("INFO VUPlus Driver loaded")
 
 	// Volume Channel
 	player.ApplyVolumeUp = func() error {
